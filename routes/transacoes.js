@@ -10,37 +10,54 @@ router.get('/', (req, res) => {
     });
 });
 
-router.post('/', (req, res) => {
-    const { emailDoador, emailGanhador, motivo, quantidade } = req.body;
-    if(!emailDoador || !emailGanhador || !motivo || !quantidade) return res.send({error: 'Dados insuficientes' });
-    if(emailDoador == emailGanhador) return res.send({error: 'Operação não permitida.' });
+router.get('/emitidas/:email', (req, res) => {
+    Transacoes.find({emailEmissor: req.params.email}, (err, data) => {
+        if(err) return res.send({ error: 'Erro na consulta de transações.' });
+        return res.send(data);
+    });
+});
 
-    Usuarios.findOne({email: emailDoador}, (err, dataDoador) => {
-        if(err) return res.send({ error: 'Erro ao consultar usuário doador.' });
-        if(dataDoador.moedaTotalMes > 0 && dataDoador.moedaTotalMes >= quantidade){    
-            Usuarios.findOne({email: emailGanhador}, (err, dataGanhador) => {
-                if(err) return res.send({ error: 'Erro ao consultar usuário ganhador.' });
-                
-                Transacoes.create(req.body, (err, dataTransicao) => {
+router.get('/recebidas/:email', (req, res) => {
+    Transacoes.find({emailDestinatario: req.params.email}, (err, data) => {
+        if(err) return res.send({ error: 'Erro na consulta de transações.' });
+        return res.send(data);
+    });
+});
+
+router.post('/', (req, res) => {
+    const { emailEmissor, emailDestinatario, motivo, quantidade } = req.body;
+    if(!emailEmissor || !emailDestinatario || !motivo || !quantidade) return res.send({error: 'Dados insuficientes' });
+    if(emailEmissor == emailDestinatario) return res.send({error: 'Operação não permitida.' });
+
+    Usuarios.findOne({email: emailEmissor}, (err, dataEmissor) => {
+        if(err) return res.send({ error: 'Erro ao consultar usuário Emissor.' });
+        if(!dataEmissor) return res.send({ mensagem: 'Emissor não é mais um contribuidor.' });
+
+        if(dataEmissor.moedaTotalMes > 0 && dataEmissor.moedaTotalMes >= quantidade){    
+            Usuarios.findOne({email: emailDestinatario}, (err, dataDestinatario) => {
+                if(err) return res.send({ error: 'Erro ao consultar usuário destinatario.' });
+                if(!dataDestinatario) return res.send({ mensagem: 'Destinatário não é mais um contribuidor.' });
+
+                Transacoes.create(req.body, (err, dataTransacao) => {
                     if(err) return res.send({ error: 'Erro ao criar transação.' });
 
-                    dataDoador.moedaTotalMes -= quantidade;
-                    Usuarios.update({email: emailDoador}, dataDoador, (err, data) => {
-                        if(err) return res.send({ error: 'Erro ao atualizar moedas usuário doador.' });
+                    dataEmissor.moedaTotalMes -= quantidade;
+                    Usuarios.updateOne({email: emailEmissor}, dataEmissor, (err, data) => {
+                        if(err) return res.send({ error: 'Erro ao atualizar moedas usuário emissor.' });
                     });
                     
-                    dataGanhador.moedaTotal += quantidade;
-                    dataGanhador.motivo = motivo;
-                    Usuarios.update({email: emailGanhador}, dataGanhador, (err, data) => {
-                        if(err) return res.send({ error: 'Erro ao atualizar moedas usuário ganhador.' });
+                    dataDestinatario.moedaTotal += quantidade;
+                    dataDestinatario.motivo = motivo;
+                    Usuarios.updateOne({email: emailDestinatario}, dataDestinatario, (err, data) => {
+                        if(err) return res.send({ error: 'Erro ao atualizar moedas usuário destinatario.' });
                     });
 
-                    return res.send(dataTransicao);
+                    return res.send(dataTransacao);
                 });
             });
         }
         else{
-            return res.send({mensagem: 'Doador não tem saldo suficiente.' });
+            return res.send({mensagem: 'Emissor não tem saldo suficiente.' });
         }
     });
 });

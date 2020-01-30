@@ -3,43 +3,45 @@ const router = express.Router();
 const Usuarios = require('../model/usuario');
 const bcrypt = require('bcrypt');
 
-router.get('/', (req, res) => {
-    Usuarios.find({}, (err, data) => {
-        if(err) return res.send({ error: 'Erro na consulta de usuários.' });
-        return res.send(data);
-    });
+router.get('/', async (req, res) => {
+    try {
+        return res.send(await Usuarios.find({}));
+    } catch( err ) {
+        return res.send({ error: 'Erro na consulta de usuários.' });
+    }
 });
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
     const { email, senha } = req.body;
-    if(!email || !senha) return res.send({error: 'Dados insuficientes' });
+    if(!email || !senha) return res.send({ error: 'Dados insuficientes' });
 
-    Usuarios.findOne({email}, (err, data) => {
-        if(err) return res.send({ error: 'Erro ao consultar usuários.' });
-        if(data) return res.send({ error: 'Usuários já registrado.' });
-
-        Usuarios.create(req.body, (err, data) => {
-            if(err) return res.send({ error: 'Erro ao criar usuários.' });
-            data.senha = undefined;
-            return res.send(data);
-        });
-    });
+    try {
+        if(await Usuarios.findOne({email})) return res.send({ error: 'Usuários já registrado.' });
+        const usuario = await Usuarios.create(req.body);
+        usuario.senha = undefined;
+        return res.send(usuario);
+    } catch( err ) {
+        return res.send({ error: 'Erro na criação de usuário.' });
+    }
 });
 
-router.post('/auth', (req, res) => {
+router.post('/auth', async (req, res) => {
     const { email, senha } = req.body;
-    if(!email || !senha) return res.send({error: 'Dados insuficientes' });
+    if(!email || !senha) return res.send({ error: 'Dados insuficientes' });
 
-    Usuarios.findOne({email}, (err, data) => {
-        if(err) return res.send({ error: 'Erro ao consultar usuários.' });
-        if(!data) return res.send({ error: 'Usuários não registrado.' });
+    try {
+        const usuario = await Usuarios.findOne({email}).select('+senha');
+        if(!usuario) return res.send({ error: 'Usuários não registrado.' });
+        
+        const autenticado = await bcrypt.compare(senha, usuario.senha);
+        if(!autenticado) return res.send({ error: 'Erro na autenticação do usuário.' });
 
-        bcrypt.compare(senha, data.senha, (err, same) => {
-            if(!same) return res.send({ error: 'Erro ao autenticar usuários.' });
-            data.senha = undefined;
-            return res.send(data);
-        });
-    });
+        usuario.senha = undefined;
+        return res.send(usuario);
+
+    } catch( err ) {
+        return res.send({ error: 'Erro ao autenticar usuário.' });
+    }
 });
 
 module.exports = router;

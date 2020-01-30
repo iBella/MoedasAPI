@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const bcrypt = require('bcrypt');
 
-const usuarioSchema = new Schema({
+const UsuarioSchema = new Schema({
     nome: { type: String, required: true },
     email: { type: String, required: true, unique: true, lowercase: true },
     senha: { type: String, required: true, select: true },
@@ -11,14 +11,12 @@ const usuarioSchema = new Schema({
     dataCriacao: { type: Date, default: Date.now }
 });
 
-usuarioSchema.pre('save', function(next){
+UsuarioSchema.pre('save', async function(next){
     let usuario = this;
     if(!usuario.isModified('senha')) return next();
 
-    bcrypt.hash(usuario.senha, 10, (err, encrypted) => {
-        usuario.senha = encrypted;
-        return next();
-    });
+    usuario.senha = await bcrypt.hash(usuario.senha, 10);
+    return next();
 });
 
-module.exports = mongoose.model('Usuario', usuarioSchema);
+module.exports = mongoose.model('Usuario', UsuarioSchema);

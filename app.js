@@ -2,8 +2,9 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const config = require('./config/config');
 
-const stringConnection = 'mongodb+srv://admin_moedas:admin_moedas@clusterapi-w9p6q.mongodb.net/test?retryWrites=true&w=majority';
+const stringConnection = config.bd_string;
 const optionsConnection = {
     reconnectTries: Number.MAX_VALUE,
     reconnectInterval: 500,

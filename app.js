@@ -3,6 +3,8 @@ const app = express();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const config = require('./config/config');
+const expressHandlebars = require('express-handlebars');
+const path = require('path');
 
 const stringConnection = config.bd_string;
 const optionsConnection = {
@@ -25,6 +27,16 @@ mongoose.connection.on('disconnected', () => {
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, 'public')));
+
+const hbs = expressHandlebars.create({
+    extname:'hbs',
+    defaultLayout: 'main',
+    layoutsDir: path.join(__dirname, 'views/layouts'),
+    partialsDir: path.join(__dirname, 'views/layouts')
+});
+app.engine('hbs', hbs.engine);
+app.set('view engine', 'hbs');
 
 const indexRoutes = require('./routes/index');
 const loginRoutes = require('./routes/login');

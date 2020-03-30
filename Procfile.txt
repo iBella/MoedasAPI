@@ -1,0 +1,5 @@
+file.1: cd frontend/
+web.1: npm start
+file.2: cd ..
+file.3: cd backend/
+web.2: npm start

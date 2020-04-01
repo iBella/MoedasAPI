@@ -41,7 +41,7 @@ app.use('/usuarios', usuariosRoutes);
 app.use('/transacoes', transacoesRoutes);
 
 
-var porta = process.env.PORT || 3000;
+const porta = process.env.PORT || 3000;
 app.listen(porta);
 
 module.exports = app;

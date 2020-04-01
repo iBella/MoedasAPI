@@ -3,6 +3,7 @@ const app = express();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const config = require('./config/config');
+const path = require('path');
 
 const stringConnection = config.bd_string;
 const optionsConnection = {
@@ -25,6 +26,9 @@ mongoose.connection.on('disconnected', () => {
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 const indexRoutes = require('./routes/index');
 const loginRoutes = require('./routes/login');

@@ -4,7 +4,7 @@
   "description": "API - Coins - Merit Money",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node ./bin/www"
   },
   "author": "Isabella Isaac Fernandes",
   "license": "ISC",

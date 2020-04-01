@@ -40,8 +40,4 @@ app.use('/login', loginRoutes);
 app.use('/usuarios', usuariosRoutes);
 app.use('/transacoes', transacoesRoutes);
 
-
-const porta = process.env.PORT || 3000;
-app.listen(porta);
-
 module.exports = app;

@@ -4,8 +4,12 @@
   "description": "API - Coins - Merit Money",
   "main": "app.js",
   "scripts": {
+<<<<<<< HEAD:backend/package.json
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node .\\app.js"
+=======
+    "start": "node ./bin/www"
+>>>>>>> e63a6ba7ad58f75aaba11d2e8521fa3ec1237e05:package.json
   },
   "author": "Isabella Isaac Fernandes",
   "license": "ISC",

@@ -30,7 +30,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"email\": \"usuario6@teste.com\",\n\t\"senha\": \"12345\"\n}",
+					"raw": "{\n\t\"email\": \"usuario7@teste.com\",\n\t\"senha\": \"12345\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -84,7 +84,7 @@
 					"script": {
 						"id": "85fe1714-ae59-4ca9-a2c4-eb97969a28bb",
 						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
+							"pm.test(\"Status code is 201\", function () {",
 							"    pm.response.to.have.status(200);",
 							"});",
 							"",
@@ -108,7 +108,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"nome\": \"usuario 6\",\n\t\"email\": \"usuario6@teste.com\",\n\t\"senha\": \"12345\"\n}",
+					"raw": "{\n\t\"nome\": \"usuario 7\",\n\t\"email\": \"usuario7@teste.com\",\n\t\"senha\": \"12345\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -172,7 +172,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"emailEmissor\": \"usuario3@teste.com\",\n\t\"emailDestinatario\": \"usuario6@teste.com\",\n\t\"motivo\": \"motivo de teste\",\n\t\"quantidade\": 3\n}",
+					"raw": "{\n\t\"emailEmissor\": \"usuario7@teste.com\",\n\t\"emailDestinatario\": \"usuario6@teste.com\",\n\t\"motivo\": \"motivo de teste\",\n\t\"quantidade\": 3\n}",
 					"options": {
 						"raw": {
 							"language": "json"

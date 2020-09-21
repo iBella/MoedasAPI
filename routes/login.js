@@ -4,9 +4,8 @@ const Usuarios = require('../model/usuario');
 const bcrypt = require('bcrypt');
 const token = require('../middlewares/token');
 var HttpStatus = require('http-status-codes');
-var cors = require('cors')
 
-router.post('/', cors(), async (req, res) => {
+router.post('/', async (req, res) => {
     const { email, senha } = req.body;
     if(!email || !senha) return res.status(HttpStatus.BAD_REQUEST).send({ error: 'Dados insuficientes' });
 

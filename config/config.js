@@ -1,5 +1,7 @@
 const env = process.env.NODE_ENV || 'dev';
 
+console.log(`Iniciando a API em ambiente ${env}`);
+
 const config = () => {
     switch (env) {
         case 'dev':
@@ -23,6 +25,5 @@ const config = () => {
     }
 }
 
-console.log(`Iniciando a API em ambiente ${env}`);
 
 module.exports = config();

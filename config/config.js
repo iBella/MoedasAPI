@@ -16,7 +16,7 @@ const config = () => {
             jwt_senha: 'senhatoken',
             jwt_tempo_token: '7d'
         }
-        case 'prod':
+        case 'production':
         return {
             bd_string: 'mongodb+srv://admin_moedas:admin_moedas@clusterapi-w9p6q.mongodb.net/test?retryWrites=true&w=majority',
             jwt_senha: 'senhatoken',

@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const config = require('./config/config');
 const path = require('path');
+const cors = require('cors');
 
 const stringConnection = config.bd_string;
 const optionsConnection = {
@@ -24,6 +25,7 @@ mongoose.connection.on('disconnected', () => {
     console.log('Aplicação desconectada do banco de dados.');
 });
 
+app.use(cors());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
